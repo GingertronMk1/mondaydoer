@@ -19,7 +19,13 @@
     console.table(entries);
     body.style.height = null;
 
-    let text = entries.map(({id, name}) => `- ${name} ${id}`).join("\n");
+    let text = [
+      "MORNING UPDATE",
+      entries.map(({id, name}) => `- ${name} ${id}`).join("\n"),
+      "RD Hours: ",
+      "Concerns: ",
+      "From yesterday"
+    ].join("\n\n");
 
     navigator.clipboard.writeText(text).then(function() {
       window.alert(`Copied to clipboard:\n\n${text}`);
