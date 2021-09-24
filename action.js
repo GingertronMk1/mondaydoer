@@ -24,7 +24,7 @@
       entries.map(({id, name}) => `- ${name} ${id}`).join("\n"),
       "RD Hours: ",
       "Concerns: ",
-      "From yesterday"
+      "From yesterday: "
     ].join("\n\n");
 
     navigator.clipboard.writeText(text).then(function() {
