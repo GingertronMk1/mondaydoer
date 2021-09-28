@@ -28,7 +28,7 @@
     ].join("\n\n");
 
     navigator.clipboard.writeText(text).then(function() {
-      window.alert(`Copied to clipboard:\n\n${text}`);
+      window.open("https://wearesweetltd.monday.com/overviews/4130993", "_blank").focus();
     });
   }
 
