@@ -35,17 +35,15 @@
         }
       }
       let pulse_id = task.querySelector("[id^=pulse-").id.split("-")[1];
-
-      let pulse_link = [
-        base_url,
-        "boards",
-        board_id,
-        "pulses",
-        pulse_id
-      ].join("/");
-
       let task_text = task.querySelector(".ds-editable-component > .ds-text-component").innerText
       if(showing_links) {
+        let pulse_link = [
+          base_url,
+          "boards",
+          board_id,
+          "pulses",
+          pulse_id
+        ].join("/");
         tasks.push(`- ${task_text}\n  ${pulse_link}`);
       } else {
         tasks.push(`- ${task_text} ${pulse_id}`);
