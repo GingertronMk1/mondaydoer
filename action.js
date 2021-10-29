@@ -1,45 +1,56 @@
 {
   const showing_links = false;
+  const base_url = "https://wearesweetltd.monday.com";
   let getAllNames = () => {
     let body = document.querySelector('body');
     body.style.height = "50000px";
-    const divs = document.querySelectorAll("#search-everything-content [id^='pulse-']");
-    const entries = [];
+    const text = [
+      "MORNING UPDATE"
+    ];
 
-    const titles = document.querySelectorAll("span.section-type-title");
-    let today_div = null;
+    const tasks = [];
 
-    for(let i = 0; i < titles.length; i++) {
-      if (titles[i].innerText.includes("Today")) {
-        today_div = titles[i].parentElement;
-        console.log(today_div);
-        if(today_div.classList) {
-          while (![...today_div.classList].includes("deadline-tasks-section-component")) {
-            today_div = today_div.parentElement;
-          }
+    const headers = document.querySelectorAll(".section-header-wrapper");
+
+    let today_header = null;
+
+    for(let i = 0; i < headers.length; i++) {
+      if(headers[i].innerText.toLowerCase().includes('today')) {
+        today_header = headers[i];
+        break;
+      }
+    }
+
+    let task = today_header.nextElementSibling;
+
+    while (task.classList.contains("pulse-component-wrapper")) {
+      let task_classes = [...task.classList];
+      let board_regex = /board-id-(\d+)/;
+      let board_id = null;
+      for(let i = 0; i < task_classes.length; i++) {
+        let match = task_classes[i].match(board_regex);
+        if(match) {
+          board_id = task_classes[i].replace(board_regex, "$1");
           break;
         }
       }
-    }
-    console.log(today_div);
+      let pulse_id = task.querySelector("[id^=pulse-").id.split("-")[1];
 
-    let today_tasks = today_div.querySelectorAll("div.deadline-task-component");
+      let pulse_link = [
+        base_url,
+        "boards",
+        board_id,
+        "pulses",
+        pulse_id
+      ].join("/");
 
-    let text = [
-      "MORNING UPDATE"
-    ];
-    let tasks = [];
-    for (let i = 0; i < today_tasks.length; i++) {
-      const task = today_tasks[i];
-      const task_text_wrapper = task.querySelector("div.pulse-name-wrapper");
-      const task_link = "wearesweetltd.monday.com/" + task_text_wrapper.querySelector("a.full-width.button_link").getAttribute("href");
-      const task_text = task_text_wrapper.querySelector("span.pulse-name-text").innerText;
+      let task_text = task.querySelector(".ds-editable-component > .ds-text-component").innerText
       if(showing_links) {
-        tasks.push(`- ${task_text}: ${task_link}`);
+        tasks.push(`- ${task_text}\n  ${pulse_link}`);
+      } else {
+        tasks.push(`- ${task_text} ${pulse_id}`);
       }
-      else {
-        tasks.push(`- ${task_text}`);
-      }
+      task = task.nextElementSibling;
     }
 
     text.push(tasks.join("\n"));
@@ -53,10 +64,8 @@
       text.push("From yesterday: ");
     }
 
-    text = text.join("\n\n");
-
-    navigator.clipboard.writeText(text).then(function() {
-      window.open("https://wearesweetltd.monday.com/overviews/4130993", "_blank").focus();
+    navigator.clipboard.writeText(text.join("\n\n")).then(function() {
+      window.open(`${base_url}/overviews/4130993`, "_blank").focus();
     });
   }
 
