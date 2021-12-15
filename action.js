@@ -1,16 +1,22 @@
 {
-  const showing_links = false;
+  const showing_links = true;
   const base_url = "https://wearesweetltd.monday.com";
-  let getAllNames = () => {
+  const makeBold = (text) => {
+    return `*${text}*`;
+  }
+
+  const getAllNames = () => {
     let body = document.querySelector('body');
     body.style.height = "50000px";
     const text = [
-      "MORNING UPDATE"
+      makeBold("MORNING UPDATE"),
+      makeBold("Rows To Do")
     ];
 
     const tasks = [];
 
     const headers = document.querySelectorAll(".section-header-wrapper");
+    const is_monday = (new Date()).getDay() === 1;
 
     let today_header = null;
 
@@ -36,27 +42,26 @@
       }
       let pulse_id = task.querySelector("[id^=pulse-").id.split("-")[1];
       let task_text = task.querySelector(".ds-editable-component > .ds-text-component").innerText
-      if(showing_links) {
-        let pulse_link = [
-          base_url,
-          "boards",
-          board_id,
-          "pulses",
-          pulse_id
-        ].join("/");
-        tasks.push(`- ${task_text}\n  ${pulse_link}`);
-      } else {
-        tasks.push(`- ${task_text} ${pulse_id}`);
-      }
+      let pulse_link = [
+        base_url,
+        "boards",
+        board_id,
+        "pulses",
+        pulse_id
+      ].join("/");
+      tasks.push(`1. [${task_text}](${pulse_link})`);
       task = task.nextElementSibling;
     }
 
     text.push(tasks.join("\n"));
 
-    text.push("RD Hours: ");
-    text.push("Concerns: ");
+    text.push(makeBold("Unprioritised/Scheduled Tasks"));
 
-    if((new Date()).getDay() === 1) {
+    text.push("RD Hours: ");
+    text.push("Comments/Concerns: ");
+    text.push("Fixed dates today: ");
+
+    if(is_monday) {
       text.push("From last week: ");
     } else {
       text.push("From yesterday: ");
@@ -67,5 +72,6 @@
     });
   }
 
-  getAllNames();
+  console.log("Waiting 10 seconds");
+  setTimeout(getAllNames, 10000);
 }

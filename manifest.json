@@ -6,8 +6,21 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
   "action": {
     "default_title": "Click me!"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.monday.com/my_work?dailyupdate=1"
+      ],
+      "js": ["action.js"]
+    }
+  ]
+
 }
