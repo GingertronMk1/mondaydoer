@@ -1,25 +1,26 @@
 {
-  const showing_links = true;
   const base_url = "https://wearesweetltd.monday.com";
-  const makeBold = (text) => {
-    return `*${text}*`;
-  }
+  const makeBold = (text) => `*${text}*`;
 
-  const getAllNames = () => {
-    let body = document.querySelector('body');
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
+  const getAllTasks = () => {
+    const body = document.querySelector('body');
     body.style.height = "50000px";
-    const text = [
-      makeBold("MORNING UPDATE"),
-      makeBold("Rows To Do")
-    ];
-
     const tasks = [];
-
     const headers = document.querySelectorAll(".section-header-wrapper");
-    const is_monday = (new Date()).getDay() === 1;
-
     let today_header = null;
-
     for(let i = 0; i < headers.length; i++) {
       if(headers[i].innerText.toLowerCase().includes('today')) {
         today_header = headers[i];
@@ -49,11 +50,25 @@
         "pulses",
         pulse_id
       ].join("/");
-      tasks.push(`1. [${task_text}](${pulse_link})`);
+      tasks.push({text: task_text, link: pulse_link});
       task = task.nextElementSibling;
     }
 
-    text.push(tasks.join("\n"));
+    return tasks;
+  }
+
+  const morning = () => {
+    const text = [
+      makeBold("MORNING UPDATE"),
+      makeBold("Rows To Do")
+    ];
+
+
+    const is_monday = (new Date()).getDay() === 1;
+
+    let tasks = getAllTasks();
+
+    text.push(tasks.map(({text, link}) => `1. [${text}](${link})`).join("\n"));
 
     text.push(makeBold("Unprioritised/Scheduled Tasks"));
 
@@ -72,6 +87,30 @@
     });
   }
 
+  const afternoon = () => {
+    let text = [
+      makeBold("UPDATE UPDATE"),
+      makeBold("Complete by EOD:")
+    ]
+
+    let tasks = getAllTasks();
+
+    text.push(tasks.map(({text, link}) => `- [${text}](${link})`).join("\n"));
+
+    text = text.concat([
+      makeBold("Incomplete by EOD:"),
+      makeBold("Comments/Concerns:"),
+      makeBold("Screenshot")
+    ]);
+
+    navigator.clipboard.writeText(text.join("\n\n")).then(function() {
+      alert("Copied to clipboard");
+    });
+  }
+
   console.log("Waiting 10 seconds");
-  setTimeout(getAllNames, 10000);
+  switch(findGetParameter("dailyupdate")) {
+    case "morning": setTimeout(morning, 10000); break;
+    case "afternoon": setTimeout(afternoon, 10000); break;
+  };
 }

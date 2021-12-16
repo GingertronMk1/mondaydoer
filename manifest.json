@@ -12,12 +12,13 @@
     "scripting"
   ],
   "action": {
-    "default_title": "Click me!"
+    "default_title": "Choose morning or afternoon",
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": [
-        "https://*.monday.com/my_work?dailyupdate=1"
+        "https://*.monday.com/my_work?dailyupdate=*"
       ],
       "js": ["action.js"]
     }
