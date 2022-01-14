@@ -26,6 +26,12 @@ button#afternoon {
   background-color: #725c66;
 }
 
+button:hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 0.5rem black);
+  filter: brightness(0.9);
+}
+
 button + button {
   margin-top: 0.5rem;
 }
