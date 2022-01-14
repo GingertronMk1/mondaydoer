@@ -41,8 +41,8 @@
           break;
         }
       }
-      let pulse_id = task.querySelector("[id^=pulse-").id.split("-")[1];
-      let task_text = task.querySelector(".ds-editable-component > .ds-text-component").innerText
+      let pulse_id = task?.querySelector("[id^=pulse-")?.id.split("-")[1];
+      let task_text = task?.querySelector(".name-cell-text")?.innerText;
       let pulse_link = [
         base_url,
         "boards",
